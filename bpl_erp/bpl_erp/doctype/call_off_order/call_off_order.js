@@ -5,6 +5,23 @@ frappe.ui.form.on('Call Off Order', {
 	refresh: function(frm) {
 
 	},
+	purchase_rep:function(frm){
+		frm.set_value("purchase_rep_email","");
+		frm.set_value("purchase_rep_mobile_number","");
+		if(frm.doc.purchase_rep){
+			frappe.call({
+			method:"frappe.contacts.doctype.contact.contact.get_contact_details",
+			args:{"contact":frm.doc.purchase_rep},
+			callback:function(r){
+				if(r.message){
+					frm.set_value("purchase_rep_email",r.message.contact_email);
+					frm.set_value("purchase_rep_mobile_number",r.message.contact_phone);
+				}
+			}
+
+		});
+		}
+	},
 	supplier:function(frm){
 		frm.set_value("supplier_rep","");
 		frm.set_value("supplier_address","");
@@ -84,7 +101,6 @@ frappe.ui.form.on('Call Off Order', {
 	},
 
 	service_agreement:function(frm){
-		console.log("bom");
 		frappe.call({
 				doc:frm.doc,
 				method:"get_service_agreement",
