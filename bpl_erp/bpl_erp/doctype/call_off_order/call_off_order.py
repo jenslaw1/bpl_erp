@@ -18,3 +18,8 @@ class CallOffOrder(Document):
 		if self.purchase_order:
 			po = frappe.get_doc("Purchase Order",self.purchase_order)
 			return money_in_words(po.total)
+
+	def get_service_agreement(self):
+		if self.service_agreement:
+			sa = frappe.get_doc('Service Agreement', self.service_agreement)
+			return sa.as_dict()

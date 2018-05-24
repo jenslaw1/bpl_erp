@@ -81,6 +81,19 @@ frappe.ui.form.on('Call Off Order', {
 				}
 			});
 		}		
+	},
+
+	service_agreement:function(frm){
+		console.log("bom");
+		frappe.call({
+				doc:frm.doc,
+				method:"get_service_agreement",
+				callback:function(r){
+					if(r.message){
+						frm.set_value("service_agreement_title",r.message.agreement_title);					
+					}
+				}
+			});
 	}
 
 });
