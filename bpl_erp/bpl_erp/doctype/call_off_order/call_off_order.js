@@ -3,8 +3,16 @@
 
 frappe.ui.form.on('Call Off Order', {
 	refresh: function(frm) {
-
+		frm.set_query("party_type","signatories", function(doc, cdt, cdn){
+			return {
+				filters:{
+					name:["in",["Company","Supplier"]]
+				}
+			};
+		});
 	},
+
+
 	purchase_rep:function(frm){
 		frm.set_value("purchase_rep_email","");
 		frm.set_value("purchase_rep_mobile_number","");
