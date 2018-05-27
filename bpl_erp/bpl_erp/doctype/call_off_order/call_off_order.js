@@ -83,6 +83,8 @@ frappe.ui.form.on('Call Off Order', {
 		frm.set_value("purchase_order_date",undefined);
 		frm.set_value("purchase_order_price","");
 		frm.set_value("po_price_words","");
+		frm.clear_table("po_items");
+		frm.refresh_field("po_items");
 		if(frm.doc.purchase_order){
 			frm.set_value("purchase_order_date","");
 			frappe.call({
@@ -105,6 +107,7 @@ frappe.ui.form.on('Call Off Order', {
 					}
 				}
 			});
+			setup_po_items(frm);
 		}		
 	},
 
@@ -120,4 +123,33 @@ frappe.ui.form.on('Call Off Order', {
 			});
 	}
 
+	
 });
+
+
+var setup_po_items = function(frm){
+	frappe.call({
+			doc:frm.doc,
+			method:"get_po_items",
+			callback:function(r){
+				if(r.message){
+					
+					$.each(r.message, function(i, val){
+						var d = frappe.model.add_child(frm.doc, "Purchase Order Item", "po_items");
+						d.item_code = val.item_code;
+						d.qty = val.qty;
+						d.uom = val.uom;
+						d.unit_price = val.rate;
+						d.total_price = val.amount;
+						d.part_number = val.supplier_part_no;
+						d.description = val.description;							
+					});	
+					frm.refresh_field("po_items");			
+				}
+			}
+		});
+	}
+
+
+
+

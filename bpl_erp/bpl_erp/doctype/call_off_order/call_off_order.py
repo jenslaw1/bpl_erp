@@ -24,12 +24,34 @@ class CallOffOrder(Document):
 			sa = frappe.get_doc('Service Agreement', self.service_agreement)
 			return sa.as_dict()
 
+	def get_po_items(self, update=False):
+		if self.purchase_order:
+			po = frappe.get_doc("Purchase Order",self.purchase_order)
+			if not update:
+				return po.items
+			self.set("po_items",[])
+			for item in po.items:
+				d = frappe.new_doc("COO Purchase Order Items")
+				d.parent = self.name
+				d.parenttype = "Call Off Order"
+				d.parentfield = "po_items"
+				d.item_code = item.item_code;
+				d.qty = item.qty;
+				d.uom = item.uom;
+				d.unit_price = item.rate;
+				d.total_price = item.amount;
+				d.part_number = item.supplier_part_no;
+				d.description = item.description;
+				self.po_items.append(d)
+
+
+
 	def validate(self):
 		self.collect_po_details()
+		self.get_po_items(update=True)
 		
 
 	def collect_po_details(self):
-		# frappe.logger().debug(self.po_price_words)
 		if self.purchase_order:
 			po = frappe.get_doc("Purchase Order",self.purchase_order)
 			self.purchase_order_price = po.total
