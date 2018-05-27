@@ -23,3 +23,15 @@ class CallOffOrder(Document):
 		if self.service_agreement:
 			sa = frappe.get_doc('Service Agreement', self.service_agreement)
 			return sa.as_dict()
+
+	def validate(self):
+		self.collect_po_details()
+		
+
+	def collect_po_details(self):
+		# frappe.logger().debug(self.po_price_words)
+		if self.purchase_order:
+			po = frappe.get_doc("Purchase Order",self.purchase_order)
+			self.purchase_order_price = po.total
+			self.purchase_order_date = po.transaction_date
+			self.po_price_words = self.get_po_amount_in_words()

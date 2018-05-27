@@ -80,7 +80,7 @@ frappe.ui.form.on('Call Off Order', {
 	},
 
 	purchase_order:function(frm){
-		frm.set_value("purchase_order_date",null);
+		frm.set_value("purchase_order_date",undefined);
 		frm.set_value("purchase_order_price","");
 		frm.set_value("po_price_words","");
 		if(frm.doc.purchase_order){
