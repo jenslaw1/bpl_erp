@@ -49,6 +49,7 @@ class CallOffOrder(Document):
 	def validate(self):
 		self.collect_po_details()
 		self.get_po_items(update=True)
+		self.set_signature_placeholder()
 		
 
 	def collect_po_details(self):
@@ -57,3 +58,7 @@ class CallOffOrder(Document):
 			self.purchase_order_price = po.total
 			self.purchase_order_date = po.transaction_date
 			self.po_price_words = self.get_po_amount_in_words()
+
+	def set_signature_placeholder(self):
+		for i in self.signatories:
+			i.signature = "."
