@@ -150,6 +150,9 @@ var setup_po_items = function(frm){
 		});
 	}
 
+var update_signatories_items = function(frm){
+	
+}
 
 
 
