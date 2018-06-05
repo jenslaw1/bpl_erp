@@ -18,6 +18,7 @@ frappe.ui.form.on('Service Order', {
 		frm.set_value("company_rep_email","");
 		frm.set_value("company_rep_mobile","");
 		if(frm.doc.company_rep){
+			setup_signatory(frm);
 			frappe.call({
 			method:"frappe.contacts.doctype.contact.contact.get_contact_details",
 			args:{"contact":frm.doc.company_rep},
@@ -35,6 +36,7 @@ frappe.ui.form.on('Service Order', {
 		frm.set_value("contractor_rep_email","");
 		frm.set_value("contractor_rep_mobile_number","");
 		if(frm.doc.contractor_rep){
+			setup_signatory(frm);
 			frappe.call({
 			method:"frappe.contacts.doctype.contact.contact.get_contact_details",
 			args:{"contact":frm.doc.contractor_rep},
@@ -135,4 +137,29 @@ var get_amount_in_words = function(frm){
 			}
 		}
 	});
+}
+
+var setup_signatory = function(frm){
+	// Clear rows first
+	frm.set_value("signatories", []);
+	set_contractor_on_signatory(frm);
+	set_company_on_signatory(frm);
+	frm.refresh_field('signatories');
+
+}
+
+var set_contractor_on_signatory = function(frm){
+	var d = frappe.model.add_child(frm.doc, "Service Order Signatories", "signatories");
+	d.party_type = "Supplier";
+	d.party = frm.doc.contractor;
+	d.name1 = frm.doc.contractor_rep;
+
+}
+
+var set_company_on_signatory = function(frm){
+	var d = frappe.model.add_child(frm.doc, "Service Order Signatories", "signatories");
+	d.party_type = "Company";
+	d.party = frm.doc.company;
+	d.name1 = frm.doc.company_rep;
+
 }
