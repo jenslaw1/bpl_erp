@@ -128,6 +128,7 @@ frappe.ui.form.on('Call Off Order', {
 
 
 var setup_po_items = function(frm){
+	frm.fields_dict.po_items.grid.df.read_only = 1;
 	frappe.call({
 			doc:frm.doc,
 			method:"get_po_items",
