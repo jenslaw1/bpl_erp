@@ -17,8 +17,8 @@ frappe.ui.form.on('Service Order', {
 	company_rep:function(frm){
 		frm.set_value("company_rep_email","");
 		frm.set_value("company_rep_mobile","");
+		setup_signatory(frm);
 		if(frm.doc.company_rep){
-			setup_signatory(frm);
 			frappe.call({
 			method:"frappe.contacts.doctype.contact.contact.get_contact_details",
 			args:{"contact":frm.doc.company_rep},
@@ -35,8 +35,8 @@ frappe.ui.form.on('Service Order', {
 	contractor_rep:function(frm){
 		frm.set_value("contractor_rep_email","");
 		frm.set_value("contractor_rep_mobile_number","");
+		setup_signatory(frm);
 		if(frm.doc.contractor_rep){
-			setup_signatory(frm);
 			frappe.call({
 			method:"frappe.contacts.doctype.contact.contact.get_contact_details",
 			args:{"contact":frm.doc.contractor_rep},
@@ -53,6 +53,7 @@ frappe.ui.form.on('Service Order', {
 	contractor:function(frm){
 		frm.set_value("contractor_rep","");
 		frm.set_value("contractor_address","");
+		setup_signatory(frm);
 		frm.set_query("contractor_rep", function(doc) {
 				return {
 					filters: {
@@ -77,7 +78,6 @@ frappe.ui.form.on('Service Order', {
 				doc:frm.doc,
 				method:"get_service_agreement",
 				callback:function(r){
-					console.log(r);
 					if(r.message){
 						frm.set_value("agreement_title",r.message.agreement_title);					
 					}
